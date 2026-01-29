@@ -1,0 +1,217 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  Active
+  Inactive
+  Blocked
+}
+
+model user_tbl {
+  user_id    BigInt   @id @default(autoincrement())
+  email      String   @unique
+  username   String   @unique
+  full_name  String
+  id_number  String
+  password   String
+
+  status            UserStatus @default(Active)
+
+  created_at          DateTime @default(now())
+  password_updated_at DateTime @default(now())
+
+  user_roles user_roles[]
+  sessions   sessions[]
+  event_logs event_log_tbl[]
+  password_resets  password_reset_tbl[]
+}
+
+model roles {
+  role_id BigInt @id @default(autoincrement())
+  name    String @unique
+  user_roles user_roles[]
+}
+
+model user_roles {
+  id       BigInt @id @default(autoincrement())
+  user_id  BigInt
+  role_id  BigInt
+
+  user user_tbl @relation(fields: [user_id], references: [user_id])
+  role roles   @relation(fields: [role_id], references: [role_id])
+
+  @@unique([user_id, role_id])
+}
+
+model sessions {
+  session_id BigInt   @id @default(autoincrement())
+  user_id    BigInt
+  token      String   @unique
+  expires_at DateTime
+  user user_tbl @relation(fields: [user_id], references: [user_id])
+}
+
+model event_log_tbl {
+  log_id      BigInt   @id @default(autoincrement())
+  user_id     BigInt
+  action      String
+  description String?
+  created_at  DateTime @default(now())
+
+  user user_tbl @relation(fields: [user_id], references: [user_id])
+}
+
+model client_tbl {
+  client_id  BigInt   @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  phone      String?
+  contact_person String?
+  contact_email String?
+  address    String?
+  website    String? 
+  logo    String?           
+  status     ClientStatus   @default(ACTIVE)
+  created_at DateTime @default(now())
+
+  projects   project_tbl[]
+}
+
+model project_tbl {
+  project_id   BigInt   @id @default(autoincrement())
+  name         String
+  category     String
+  client_id    BigInt
+  amount       Float
+  deposit      Float
+  start_date   DateTime?
+  end_date     DateTime?
+  status       ProjectStatus   @default(PENDING)
+  notes        String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  client       client_tbl @relation(fields: [client_id], references: [client_id])
+  invoices     invoice_tbl[]
+}
+
+model invoice_tbl {
+  invoice_id   BigInt   @id @default(autoincrement())
+  project_id   BigInt
+  amount       Float
+  deposit      Float
+  paid_amount  Float     @default(0)
+  status       InvoiceStatus @default(PENDING)
+  created_at   DateTime @default(now())
+
+  project      project_tbl @relation(fields: [project_id], references: [project_id])
+}
+
+enum InvoiceStatus {
+  PENDING
+  PARTIALLY_PAID
+  PAID
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum ProjectStatus {
+  PENDING
+  ACTIVE
+  CANCELLED
+  COMPLETED
+}
+
+model notification_tbl {
+  notification_id BigInt @id @default(autoincrement())
+  title           String
+  message         String
+  sender_name     String
+  sender_email    String
+  created_at      DateTime @default(now())
+  read            Boolean  @default(false)
+}
+
+model password_reset_tbl {
+  id          BigInt   @id @default(autoincrement())
+  user_id     BigInt
+  token       String   @unique
+  expires_at  DateTime
+  created_at  DateTime @default(now())
+
+  user user_tbl @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@index([token])
+}
+
+model jobs_tbl {
+  job_id       BigInt    @id @default(autoincrement())
+  title        String
+  department   String?
+  location     String?
+  status       jobStatus @default(OPEN)
+  posted_date  DateTime  @default(now())
+  closing_date DateTime?
+  description  String?
+  requirements Requirement[]
+
+  @@map("jobs_tbl")
+}
+
+enum jobStatus {
+  OPEN
+  CLOSED
+  PAUSED
+}
+
+model Requirement {
+  requirement_id BigInt   @id @default(autoincrement())
+  job_id         BigInt
+  requirement    String
+
+  job jobs_tbl @relation(fields: [job_id], references: [job_id])
+
+  @@map("job_requirements")
+}
+
+model blog_tbl {
+  blog_id    BigInt   @id @default(autoincrement())
+  title      String
+  slug       String   @unique
+  summary    String
+  category   String
+  image      String?
+  author     String
+  status     String   @default("Draft") // Draft, Published, Archived
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relation (virtual only — no fields/references here)
+  details    blog_detail_tbl?
+}
+
+model blog_detail_tbl {
+  blog_id    BigInt   @id
+  content    String   
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relation owner
+  blog       blog_tbl @relation(fields: [blog_id], references: [blog_id], onDelete: Cascade)
+}
+
+
+
+
+
+
