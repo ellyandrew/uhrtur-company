@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/ToastContext";
 import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/TextArea";
+import { TextArea } from "@/components/ui/TextArea";
 import { Button } from "@/components/ui/Button";
 
 export default function NewJobPage() {
@@ -100,7 +100,7 @@ export default function NewJobPage() {
           value={closingDate}
           onChange={(e) => setClosingDate(e.target.value)}
         />
-        <Textarea
+        <TextArea
           label="Job Description"
           rows={5}
           value={description}

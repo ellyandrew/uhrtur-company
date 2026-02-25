@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/TextArea";
+import { TextArea } from "@/components/ui/TextArea";
 import { useToast } from "@/components/ui/ToastContext";
 import { isValidEmail, isValidPersonName, } from "@/lib/scripts/validators";
 
@@ -156,7 +156,7 @@ export default function ContactPage() {
             </div>
 
             {/* Message */}
-            <Textarea
+            <TextArea
               placeholder="Your Message"
               rows="5"
               value={message}

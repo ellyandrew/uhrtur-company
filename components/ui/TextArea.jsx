@@ -1,6 +1,6 @@
 import { cn } from "@/lib/scripts/utils";
 
-export function Textarea({ className, ...props }) {
+export function TextArea({ className, ...props }) {
   return (
     <textarea
       {...props}

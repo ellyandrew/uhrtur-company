@@ -7,7 +7,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-  createServer((req, res) => handle(req, res)).listen(process.env.PORT || 3000, () => {
+  createServer((req, res) => handle(req, res)).listen(process.env.PORT || 3011, () => {
     console.log("Next.js app running");
   });
 });

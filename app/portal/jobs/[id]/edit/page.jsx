@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Input, Textarea, Button } from "@/components/ui/Input";
+import { Input } from "@/components/ui/Input";
+import { TextArea } from "@/components/ui/TextArea";
+import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/ToastContext";
 
 export default function EditJobPage() {
@@ -127,7 +129,7 @@ export default function EditJobPage() {
           onChange={(e) => setClosingDate(e.target.value)}
         />
 
-        <Textarea
+        <TextArea
           label="Job Description"
           rows={5}
           value={description}
