@@ -13,7 +13,7 @@ export default function ProductDetailPage() {
     description:
       "A complete platform for managing schools, students, fees, exams, and reporting.",
     category: "Education",
-    image: "/products/school.png",
+    image: "/products/desk/school.png",
 
     webUI: [
       "/products/desk/school-web-1.png",
